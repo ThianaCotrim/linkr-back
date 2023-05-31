@@ -6,6 +6,7 @@ import {
   editPostDB,
   deletePostDB,
 } from "../repositories/posts.repository.js";
+import { theMetadata } from "../repositories/metadata.repository.js";
 
 export async function createPost(req, res) {
     const {link, description} = req.body
@@ -25,18 +26,6 @@ export async function createPost(req, res) {
     }catch (err) {
         res.status(500).send(err.message)
     }
-
-
-export async function createPost(req, res) {
-  try {
-    res.sendStatus(200);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-
-}
-async function getMetadata(link) {
-    return urlMetadata(link)
 }
 
 export async function getAllPosts(req, res) {
