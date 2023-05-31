@@ -11,8 +11,7 @@ export async function tokenValidation(req, res, next){
     res.locals.session = session.rows[0];
     next();
 
-} catch (error) {
-    return res.status(500).send(error.message);
-
-} 
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }   
 }
