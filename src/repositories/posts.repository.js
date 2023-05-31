@@ -1,5 +1,6 @@
+import { db } from "../database/database.connection.js";
 export function newPost (userId, link, description) {
-    return db.query('INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id', [userId, link, description])
+    return db.query(`INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id;`, [userId, link, description])
 };
 export function getPosts(id,page) {
     const offset = (page - 1) * 20;
@@ -13,6 +14,6 @@ export function getPosts(id,page) {
     [id,offset]);
     }
 export function findPostById (id) {
-    return db.query("SELECT * FROM posts WHERE id = $1", [id]);
+    return db.query(`SELECT * FROM posts WHERE id = $1`, [id]);
 
 };
