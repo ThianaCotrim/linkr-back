@@ -1,12 +1,8 @@
 
 import {Router} from 'express'
 import { tokenValidation } from '../middlewares/tokenValidation.js'
-import { createPost, getAllPosts } from '../controllers/post.controller.js'
 import { validateSchema } from '../middlewares/validateSchema.js'
 import { postBodySchema } from '../schemas/postSchema.js'
-
-import { Router } from "express";
-import { tokenValidation } from "../middlewares/tokenValidation.js";
 import {
   createPost,
   getAllPosts,
@@ -15,8 +11,6 @@ import {
   editPost,
   deletePost,
 } from "../controllers/post.controller.js";
-import { postSchema } from "../schemas/post.schema.js";
-import { validateSchema } from "../middlewares/validateSchema.js";
 import { EditPostValidation } from "../middlewares/post.middleware.js";
 
 
@@ -32,7 +26,7 @@ postRouter.get("/hashtag", tokenValidation, getHashtags);
 postRouter.get("hashtag/:hashtag", tokenValidation, getSpecificHashtag);
 postRouter.put(
   "/posts/:id",
-  validateSchema(postSchema),
+  validateSchema(postBodySchema),
   tokenValidation,
   EditPostValidation,
   editPost
