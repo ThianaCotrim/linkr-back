@@ -19,9 +19,6 @@ export async function createPost(req, res) {
             const { title, image, description} = response
             theMetadata(title, description, image, postId)
         })
-        
-        
-
         res.sendStatus(201)
     }catch (err) {
         res.status(500).send(err.message)
@@ -31,7 +28,6 @@ export async function createPost(req, res) {
 export async function getAllPosts(req, res) {
   try {
     const {rows: posts} = await getPosts()
-    console.log(posts)
     res.status(200).send(posts)
   } catch (err) {
     res.status(500).send(err.message);
