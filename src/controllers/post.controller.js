@@ -1,5 +1,7 @@
+
 import urlMetadata from "url-metadata"
 import { getPosts, newPost } from "../repositories/posts.repository.js"
+
 import {
   allHashtags,
   getSpecificHashtagDB,
@@ -23,6 +25,11 @@ export async function createPost(req, res) {
     }catch (err) {
         res.status(500).send(err.message)
     }
+
+
+async function getMetadata(link) {
+  return urlMetadata(link);
+
 }
 
 export async function getAllPosts(req, res) {

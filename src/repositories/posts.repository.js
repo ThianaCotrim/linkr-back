@@ -1,7 +1,5 @@
 import { db } from "../database/database.connection.js";
-export function newPost (userId, link, description) {
-    return db.query(`INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id;`, [userId, link, description])
-};
+
 export function getPosts() {
     return db.query(`
     SELECT p.*, u.name AS username, u."profileImage" AS image, 
@@ -17,6 +15,18 @@ export function findPostById (id) {
     return db.query(`SELECT * FROM posts WHERE id = $1`, [id]);
 
 };
+
+
+export function newPost(userId, link, description) {
+  return db.query(
+    'INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id',
+    [userId, link, description]
+  );
+}
+
+export function findPostById(id) {
+  return db.query("SELECT * FROM posts WHERE id = $1", [id]);
+}
 
 export async function allHashtags() {
     try {
@@ -35,23 +45,22 @@ export async function allHashtags() {
       return err.message;
     }
   }
-  
-  export function editPostDB(id, link, description) {
-    return db.query(
-      `UPDATE posts
-          SET link = $1, description = $2
-          WHERE id = $3
-          RETURNING *`,
-      [link, description, id]
-    );
-  }
-  
-  
-  export function deletePostDB(id) {
-    return db.query(
-      `DELETE FROM posts
-          WHERE id = $1
-          RETURNING *`,
-      [id]
-    );
-  }
+
+export function editPostDB(id, link, description) {
+  return db.query(
+    `UPDATE posts
+        SET link = $1, description = $2
+        WHERE id = $3
+        RETURNING *`,
+    [link, description, id]
+  );
+}
+
+export function deletePostDB(id) {
+  return db.query(
+    `DELETE FROM posts
+        WHERE id = $1
+        RETURNING *`,
+    [id]
+  );
+}
