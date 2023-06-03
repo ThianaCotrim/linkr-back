@@ -11,11 +11,6 @@ export function getPosts() {
         ORDER BY p."createdAt" DESC LIMIT 20
         ;`);
     }
-export function findPostById (id) {
-    return db.query(`SELECT * FROM posts WHERE id = $1`, [id]);
-
-};
-
 
 export function newPost(userId, link, description) {
   return db.query(

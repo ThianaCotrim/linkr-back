@@ -26,7 +26,7 @@ export async function createPost(req, res) {
         res.status(500).send(err.message)
     }
 
-
+}
 async function getMetadata(link) {
   return urlMetadata(link);
 
