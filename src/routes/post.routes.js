@@ -11,7 +11,7 @@ const postRouter = Router();
 
 postRouter.post("/posts", tokenValidation, createPost);
 postRouter.get("/posts", tokenValidation, getAllPosts);
-postRouter.get("/hashtag", tokenValidation, getHashtags);
-postRouter.get("hashtag/:hashtag", tokenValidation, getSpecificHashtag);
+postRouter.get("/hashtag", getHashtags);
+postRouter.get("/hashtag/:hashtag", getSpecificHashtag);
 
 export default postRouter;

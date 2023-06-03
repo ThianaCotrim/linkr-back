@@ -1,4 +1,7 @@
-import { allHashtags } from "../repositories/posts.repository.js";
+import {
+	allHashtags,
+	getSpecificHashtagDB,
+} from "../repositories/posts.repository.js";
 
 export async function createPost(req, res) {
 	try {
