@@ -1,7 +1,7 @@
 import { db } from "../database/database.connection.js";
 
 export function getPosts() {
-    return db.query(`
+  return db.query(`
     SELECT p.*, u.name AS username, u."profileImage" AS image, 
         m.title AS metatitle, m.description AS metadescript, m.image AS metaimage, u.id AS owner
         FROM posts p
@@ -10,8 +10,7 @@ export function getPosts() {
         GROUP BY p.id, u.id, p.description, p.link, u.name, u."profileImage", m.title, m.description, m.image
         ORDER BY p."createdAt" DESC LIMIT 20
         ;`);
-    }
-
+}
 export function newPost(userId, link, description) {
   return db.query(
     'INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id',
@@ -24,30 +23,30 @@ export function findPostById(id) {
 }
 
 export async function allHashtags() {
-    try {
-      const result = await db.query(`SELECT * FROM hashtags`);
-      return result;
-    } catch (err) {
-      return err.message;
-    }
+  try {
+    const result = await db.query(`SELECT * FROM hashtags`);
+    return result;
+  } catch (err) {
+    return err.message;
   }
-  
-  export async function getSpecificHashtagDB(hashtag) {
-    try {
-      const result = await db.query(`SELECT * FROM hashtags WHERE hashtag = $1`, [hashtag]);
-      return result;
-    } catch (err) {
-      return err.message;
-    }
-  }
+}
 
-export function editPostDB(id, link, description) {
+export async function getSpecificHashtagDB(hashtag) {
+  try {
+    const result = await db.query(`SELECT * FROM hashtags WHERE hashtag = $1`, [hashtag]);
+    return result;
+  } catch (err) {
+    return err.message;
+  }
+}
+
+export function editPostDB(id, description) {
   return db.query(
     `UPDATE posts
-        SET link = $1, description = $2
-        WHERE id = $3
+        SET description = $1
+        WHERE id = $2
         RETURNING *`,
-    [link, description, id]
+    [description, id]
   );
 }
 
