@@ -69,3 +69,9 @@ export function deletePostDB(id) {
     [id]
   );
 }
+
+export function insertHashtag(hashtag, postId){
+  return db.query(`
+   INSERT INTO hashtags (hashtag, "postId") VALUES ($1, $2) RETURNING id;
+  `, [hashtag, postId])
+}
