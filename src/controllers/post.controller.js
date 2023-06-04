@@ -21,14 +21,11 @@ export async function createPost(req, res) {
             const { title, image, description} = response
             theMetadata(title, description, image, postId)
         })
+        
         res.sendStatus(201)
     }catch (err) {
         res.status(500).send(err.message)
     }
-
-}
-async function getMetadata(link) {
-  return urlMetadata(link);
 
 }
 
