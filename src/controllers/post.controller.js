@@ -1,6 +1,5 @@
 import urlMetadata from "url-metadata";
 import { getPosts, newPost } from "../repositories/posts.repository.js";
-
 import {
   allHashtags,
   getSpecificHashtagDB,
@@ -12,6 +11,7 @@ import {
   like,
   dislike,
   findLike } from "../repositories/likes.repository.js";
+
 
 export async function createPost(req, res) {
     const {link, description} = req.body

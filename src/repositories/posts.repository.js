@@ -11,9 +11,6 @@ export function getPosts() {
         ORDER BY p."createdAt" DESC LIMIT 20
         ;`);
 }
-export function findPostById(id) {
-  return db.query(`SELECT * FROM posts WHERE id = $1`, [id]);
-}
 
 export function newPost(userId, link, description) {
   return db.query(
@@ -27,21 +24,31 @@ export function findPostById(id) {
 }
 
 export async function allHashtags() {
-  try {
-    const result = await db.query(`SELECT * FROM hashtags`);
-    return result;
-  } catch (err) {
-    return err.message;
-  }
+	try {
+		const result = await db.query(
+			`SELECT DISTINCT hashtag FROM hashtags LIMIT 10`
+		);
+		return result;
+	} catch (err) {
+		return err.message;
+	}
 }
 
 export async function getSpecificHashtagDB(hashtag) {
-  try {
-    const result = await db.query(`SELECT * FROM hashtags WHERE hashtag = $1`, [hashtag]);
-    return result;
-  } catch (err) {
-    return err.message;
-  }
+
+	try {
+		const result = await db.query(
+			`SELECT p.*, u.name, u."profileImage"
+			FROM posts p
+			JOIN hashtags h ON p.id = h."postId"
+			JOIN users u ON p."userId" = u.id
+			WHERE h.hashtag = $1`,
+			[hashtag]
+		);
+		return result;
+	} catch (err) {
+		return err.message;
+	}
 }
 
 export function editPostDB(id, description) {
