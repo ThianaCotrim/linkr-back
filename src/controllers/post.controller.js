@@ -1,5 +1,5 @@
 import urlMetadata from "url-metadata";
-import { getPosts, newPost } from "../repositories/posts.repository.js";
+import { getPosts, insertHashtag, newPost } from "../repositories/posts.repository.js";
 import {
   allHashtags,
   getSpecificHashtagDB,
@@ -19,6 +19,12 @@ export async function createPost(req, res) {
             const { title, image, description} = response
             theMetadata(title, description, image, postId)
         })
+        const hashtags = description.match(/#\w+/g)
+        if (hashtags) {
+          for (const hashtag of hashtags) {
+            await insertHashtag(hashtag, postId)
+          }
+        }
         
         res.sendStatus(201)
     }catch (err) {
