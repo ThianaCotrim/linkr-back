@@ -9,8 +9,10 @@ import {
   getSpecificHashtag,
   editPost,
   deletePost,
+  theLikes
 } from "../controllers/post.controller.js";
 import { EditPostValidation } from "../middlewares/post.middleware.js";
+
 
 
 const postRouter = Router();
@@ -29,6 +31,7 @@ postRouter.put(
   editPost
 );
 postRouter.delete("/posts/:id", tokenValidation, deletePost);
+postRouter.post('/like', theLikes);
 
 
 export default postRouter;
