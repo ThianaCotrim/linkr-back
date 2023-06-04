@@ -7,6 +7,11 @@ import {
   deletePostDB,
 } from "../repositories/posts.repository.js";
 import { theMetadata } from "../repositories/metadata.repository.js";
+import { 
+  like,
+  dislike,
+  findLike } from "../repositories/likes.repository.js";
+
 
 export async function createPost(req, res) {
     const {link, description} = req.body
@@ -19,12 +24,11 @@ export async function createPost(req, res) {
             const { title, image, description} = response
             theMetadata(title, description, image, postId)
         })
-        
+
         res.sendStatus(201)
     }catch (err) {
         res.status(500).send(err.message)
     }
-
 }
 
 export async function getAllPosts(req, res) {
@@ -79,3 +83,32 @@ export async function deletePost(req, res) {
     res.status(500).send(error.message);
   }
 }
+
+export async function theLikes (req, res){
+
+  const { postId, userId } = req.body
+  
+  const liked = await findLike (postId, userId)
+  
+  try {
+  
+   if(liked.rowCount===0){
+  
+    await like (postId, userId)
+    res.sendStatus(200);
+  
+   } else {
+  
+    await dislike (postId, userId)
+    res.sendStatus(200);
+  
+   }
+  
+   } catch(err){
+  
+    res.status(500).send(err.message)
+  
+   }
+  
+  }
+  
