@@ -24,7 +24,7 @@ export async function createPost(req, res) {
             const { title, image, description} = response
             theMetadata(title, description, image, postId)
         })
-        const hashtags = description.match(/#\w+/g)
+        const hashtags = description.match(/#(\w+)/g)?.map(match => match.slice(1))
         if (hashtags) {
           for (const hashtag of hashtags) {
             await insertHashtag(hashtag, postId)
