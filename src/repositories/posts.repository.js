@@ -1,7 +1,7 @@
 import { db } from "../database/database.connection.js";
 
 export function getPosts() {
-  return db.query(`
+	return db.query(`
     SELECT p.*, u.name AS username, u."profileImage" AS image, 
         m.title AS metatitle, m.description AS metadescript, m.image AS metaimage, u.id AS owner
         FROM posts p
@@ -13,14 +13,14 @@ export function getPosts() {
 }
 
 export function newPost(userId, link, description) {
-  return db.query(
-    'INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id',
-    [userId, link, description]
-  );
+	return db.query(
+		'INSERT INTO posts ("userId", link, description) VALUES ($1, $2, $3) RETURNING id',
+		[userId, link, description]
+	);
 }
 
 export function findPostById(id) {
-  return db.query("SELECT * FROM posts WHERE id = $1", [id]);
+	return db.query("SELECT * FROM posts WHERE id = $1", [id]);
 }
 
 export async function allHashtags() {
@@ -35,7 +35,6 @@ export async function allHashtags() {
 }
 
 export async function getSpecificHashtagDB(hashtag) {
-
 	try {
 		const result = await db.query(
 			`SELECT p.*, u.name, u."profileImage"
@@ -52,26 +51,29 @@ export async function getSpecificHashtagDB(hashtag) {
 }
 
 export function editPostDB(id, description) {
-  return db.query(
-    `UPDATE posts
+	return db.query(
+		`UPDATE posts
         SET description = $1
         WHERE id = $2
         RETURNING *`,
-    [description, id]
-  );
+		[description, id]
+	);
 }
 
 export function deletePostDB(id) {
-  return db.query(
-    `DELETE FROM posts
+	return db.query(
+		`DELETE FROM posts
         WHERE id = $1
         RETURNING *`,
-    [id]
-  );
+		[id]
+	);
 }
 
-export function insertHashtag(hashtag, postId){
-  return db.query(`
+export function insertHashtag(hashtag, postId) {
+	return db.query(
+		`
    INSERT INTO hashtags (hashtag, "postId") VALUES ($1, $2) RETURNING id;
-  `, [hashtag, postId])
+  `,
+		[hashtag, postId]
+	);
 }
