@@ -1,5 +1,5 @@
 import urlMetadata from "url-metadata";
-import { getFollowingPosts, insertHashtag, newPost, getFollowingById, getUserPosts } from "../repositories/posts.repository.js";
+import { getFollowingPosts, insertHashtag, newPost, getFollowingById, getUserPost } from "../repositories/posts.repository.js";
 import {
   allHashtags,
   getSpecificHashtagDB,
@@ -40,7 +40,7 @@ export async function createPost(req, res) {
 export async function getAllPosts(req, res) {
   const {userId} = res.locals.session 
   try {
-    const {rows: userPosts} = await getUserPosts(userId)
+    const {rows: userPosts} = await getUserPost(userId)
     const {rows: followingPosts } = await getFollowingPosts(userId);
     const posts = []
     userPosts.map(post => posts.push(post))
