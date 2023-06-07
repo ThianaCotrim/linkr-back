@@ -1,5 +1,5 @@
 import urlMetadata from "url-metadata";
-import { getPosts, insertHashtag, newPost } from "../repositories/posts.repository.js";
+import { getPosts, insertHashtag, newPost, getFollowingById } from "../repositories/posts.repository.js";
 import {
   allHashtags,
   getSpecificHashtagDB,
@@ -38,9 +38,11 @@ export async function createPost(req, res) {
 }
 
 export async function getAllPosts(req, res) {
+  const {userId} = res.locals.session 
   try {
-    const { rows: posts } = await getPosts();
-    res.status(200).send(posts);
+    const { rows: posts } = await getPosts(userId);
+    const {rows: followings} = await getFollowingById(userId)
+    res.status(200).send({posts, followings});
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -117,4 +119,5 @@ export async function theLikes (req, res){
    }
   
   }
+
   

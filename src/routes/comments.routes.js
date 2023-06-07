@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { singleComment , theComments } from "../repositories/comments.repository.js";
+import { singleComment , theComments } from "../controllers/comments.controllers.js";
 import { validateSchema } from "../middlewares/validateSchema.js";
 import { tokenValidation } from "../middlewares/tokenValidation.js";
 import commentsSchema from "../schemas/comments.schema.js";
