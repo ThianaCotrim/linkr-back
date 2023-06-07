@@ -1,6 +1,6 @@
 import { db } from "../database/database.connection.js";
 
-export function getUserPost(userId) {
+export function getPosts(userId) {
 	return db.query(`
 	SELECT p.*, u.name AS username, u."profileImage" AS image,  COALESCE(COUNT(DISTINCT c.id)) AS comments,
         m.title AS metatitle, m.description AS metadescript, m.image AS metaimage, u.id AS owner
@@ -8,25 +8,16 @@ export function getUserPost(userId) {
         JOIN users u ON u.id = p."userId"
         JOIN metadata m ON m."postId" = p.id
 		LEFT JOIN comments c ON p.id = c."postId"
-		WHERE p."userId" = $1
+		WHERE p."userId" = $1 OR u.id IN (
+			SELECT f."followerId"
+			FROM following f
+			WHERE f."followerId" = $1
+		  )
         GROUP BY p.id, u.id, p.description, p.link, u.name, u."profileImage", m.title, m.description, m.image
         ORDER BY p."createdAt" DESC LIMIT 20
 	;`, [userId])
 }
-export function getFollowingPosts(userId) {
-	return db.query(`
-    SELECT p.*, u.name AS username, u."profileImage" AS image,  COALESCE(COUNT(DISTINCT c.id)) AS comments,
-        m.title AS metatitle, m.description AS metadescript, m.image AS metaimage, u.id AS owner
-        FROM posts p
-        JOIN users u ON u.id = p."userId"
-        JOIN metadata m ON m."postId" = p.id
-		JOIN following f ON f."followerId" = $1
-		LEFT JOIN comments c ON p.id = c."postId"
-		WHERE f."followerId" = u.id
-        GROUP BY p.id, u.id, p.description, p.link, u.name, u."profileImage", m.title, m.description, m.image
-        ORDER BY p."createdAt" DESC LIMIT 20
-        ;`, [userId]);
-}
+
 
 export function newPost(userId, link, description) {
 	return db.query(
