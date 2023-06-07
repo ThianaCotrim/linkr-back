@@ -37,14 +37,15 @@ export async function searchUsers(req, res) {
     const results = users.rows.map((user) => ({
       id: user.id,
       name: user.name,
-      image: user.profileImage,
-
-      posts: user.posts.map((post) => ({
-        id: post.id,
-        description: post.description,
-        link: post.link,
-        likes: post.likes,
-      })),
+      profileImage: user.profileImage,
+      posts: user.posts
+        ? user.posts.map((post) => ({
+            id: post.id,
+            description: post.description,
+            link: post.link,
+            likes: post.likes,
+          }))
+        : [],
     }));
 
     res.send(results);
