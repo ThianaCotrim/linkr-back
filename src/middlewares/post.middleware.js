@@ -1,7 +1,7 @@
 export function EditPostValidation(req, res, next) {
-  const { link, description } = req.body;
+  const { description } = req.body;
 
-  if (!link || !description) {
+  if (!description) {
     return res.status(400).send("Nenhum campo pode ficar vazio!");
   }
 

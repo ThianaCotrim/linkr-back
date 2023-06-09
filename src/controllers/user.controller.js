@@ -5,17 +5,16 @@ export async function getUserById(req, res) {
 
   try {
     if (!req.headers.authorization)
-      return res.status(401).send("Você precisa estar logado para acessar esse perfil.");
+      return res.status(401).send("You must be logged in to access this user's profile.");
 
     const user = await getUserByIdDB(id);
-    const post = await getUserPostsDB(id);
+    const posts = await getUserPostsDB(id);
 
     const profile = {
-      id: user.rows[0].id,
-      name: user.rows[0].name,
-      image: user.rows[0].profileImage,
-
-      posts: post.rows.map((post) => ({
+      id: user.id,
+      name: user.name,
+      profileImage: user.profileImage,
+      posts: posts.map((post) => ({
         id: post.id,
         description: post.description,
         link: post.link,

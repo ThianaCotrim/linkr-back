@@ -1,48 +1,51 @@
 import urlMetadata from "url-metadata";
-import {  insertHashtag, newPost, getFollowingById, getPosts } from "../repositories/posts.repository.js";
+import {
+  insertHashtag,
+  newPost,
+  getFollowingById,
+  getPosts,
+} from "../repositories/posts.repository.js";
 import {
   allHashtags,
   getSpecificHashtagDB,
   editPostDB,
   deletePostDB,
+  deleteSharedPost,
+  deleteLike,
 } from "../repositories/posts.repository.js";
 import { theMetadata } from "../repositories/metadata.repository.js";
-import { 
-  like,
-  dislike,
-  findLike } from "../repositories/likes.repository.js";
-
+import { like, dislike, findLike } from "../repositories/likes.repository.js";
 
 export async function createPost(req, res) {
-    const {link, description} = req.body
-    const {userId} = res.locals.session
-    try{
-        const {rows: response} = await newPost(userId, link, description)
-        const postId = response[0].id
+  const { link, description } = req.body;
+  const { userId } = res.locals.session;
+  try {
+    const { rows: response } = await newPost(userId, link, description);
+    const postId = response[0].id;
 
-        const metadata = urlMetadata(link).then((response) => {
-            const { title, image, description} = response
-            theMetadata(title, description, image, postId)
-        })
-        const hashtags = description.match(/#\w+/g)
-        if (hashtags) {
-          for (const hashtag of hashtags) {
-            await insertHashtag(hashtag, postId)
-          }
-        }
-        
-        res.sendStatus(201)
-    }catch (err) {
-        res.status(500).send(err.message)
+    const metadata = urlMetadata(link).then((response) => {
+      const { title, image, description } = response;
+      theMetadata(title, description, image, postId);
+    });
+    const hashtags = description.match(/#\w+/g);
+    if (hashtags) {
+      for (const hashtag of hashtags) {
+        await insertHashtag(hashtag, postId);
+      }
     }
+
+    res.sendStatus(201);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 }
 
 export async function getAllPosts(req, res) {
-  const {userId} = res.locals.session 
+  const { userId } = res.locals.session;
   try {
-    const {rows: posts} = await getPosts(userId)
-    const {rows: followings} = await getFollowingById(userId)
-    res.status(200).send({posts, followings});
+    const { rows: posts } = await getPosts(userId);
+    const { rows: followings } = await getFollowingById(userId);
+    res.status(200).send({ posts, followings });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -85,39 +88,29 @@ export async function deletePost(req, res) {
   const { id } = req.params;
 
   try {
+    await deleteSharedPost(id);
+    await deleteLike(id);
     await deletePostDB(id);
-    res.sendStatus(200);
+    await res.sendStatus(200);
   } catch (error) {
     res.status(500).send(error.message);
   }
 }
 
-export async function theLikes (req, res){
+export async function theLikes(req, res) {
+  const { postId, userId } = req.body;
 
-  const { postId, userId } = req.body
-  
-  const liked = await findLike (postId, userId)
-  
+  const liked = await findLike(postId, userId);
+
   try {
-  
-   if(liked.rowCount===0){
-  
-    await like (postId, userId)
-    res.sendStatus(200);
-  
-   } else {
-  
-    await dislike (postId, userId)
-    res.sendStatus(200);
-  
-   }
-  
-   } catch(err){
-  
-    res.status(500).send(err.message)
-  
-   }
-  
+    if (liked.rowCount === 0) {
+      await like(postId, userId);
+      res.sendStatus(200);
+    } else {
+      await dislike(postId, userId);
+      res.sendStatus(200);
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
   }
-
-  
+}
