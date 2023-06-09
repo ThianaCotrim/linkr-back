@@ -25,7 +25,6 @@ postRouter.get("/hashtag", getHashtags);
 postRouter.get("/hashtag/:hashtag", getSpecificHashtag);
 postRouter.put(
 	"/posts/:id",
-	validateSchema(postBodySchema),
 	tokenValidation,
 	EditPostValidation,
 	editPost
